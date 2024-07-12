@@ -7,7 +7,7 @@ from app.lib.encoders import EmbModelName, embedding_model_provider
 from app.lib.language_model import llm_provider
 from app.lib.default_prompt import get_default_prompt_template
 from app.lib.default_prompt import get_default_system_prompt
-from app.lib.graph import Graph
+from app.lib.graph import Graph, convert_to_jsonld
 
 
 class Analyser:
@@ -36,13 +36,13 @@ class Analyser:
     def set_embedding_model(self, embedding_model: EmbModelName, embedding_model_variant):
         self.traversal_attrs['embedding_model'] = embedding_model_provider(
             embedding_model, embedding_model_variant)
-    
+
     def set_llm(self, llm_name):
         self.llm = llm_provider(llm_name)
 
     def get_traversal_history(self):
         return self.traversal_history
-    
+
     def get_current_config(self):
         print(self.traversal_attrs['embedding_model'].model_name)
         return {
@@ -53,7 +53,7 @@ class Analyser:
             'default_prompt_template': self.default_prompt.template,
             'system_message': self.llm.get_system_message()
         }
-    
+
     def __to_graph(self, graph_data):
         graph = Graph()
 
@@ -91,7 +91,7 @@ class Analyser:
                     'embedding_model': embedding_model._EmbeddingModel__encoder.model_name,
                     'depreciation': depreciation,
                     'min_score_threshold': min_score_threshold,
-                    'graph': graph.__repr__(),
+                    'graph': convert_to_jsonld(graph),
                     'start_vertex_id': start_vertex_id,
                     'context': context
                 },
@@ -123,13 +123,26 @@ class Analyser:
 
         response = self.llm.chat(prompt)
 
-        self.traversal_history[traversal_result['id']]['graph_analysis'] = response
+        self.traversal_history[traversal_result['id']
+                               ]['graph_analysis'] = response
 
-        with open(f'{traversal_result.get("id")}.md', "w") as file:
-            file.write(response)
+        # with open(f'{traversal_result.get("id")}.md', "w") as file:
+        #     file.write(response)
 
-        return { "analysis": response, "traversal": traversal_result }
-    
+        return {
+            "analysis": response, 
+            "traversal_data": {
+                "graph": traversal_result['meta']['graph'],
+                "user_provided_context": traversal_result['meta']['context'],
+                "start_vertex_id": traversal_result['meta']['start_vertex_id'],
+                "order": traversal_result['order'],
+                "scores": traversal_result['scores'],
+                "best_path": traversal_result['best_path'],
+                "best_score": traversal_result['best_score'],
+                "paths": traversal_result['paths']
+            }
+        }
+
     def question(self, query):
         return self.llm.chat(query + "\n Instruction: Ignore the output template for this question. Just return the answer in markdown format.")
 
@@ -140,17 +153,28 @@ if __name__ == "__main__":
 
     graph_data = {
         "vertices": [
-            {'id': 'A', 'label': 'Node A', 'entity': 'Movie', 'description': 'A movie about horses in the wild west'},
-            {'id': 'B', 'label': 'Node B', 'entity': 'Movie', 'description': 'A documentary about the west coast of Ireland’s wildlife'},
-            {'id': 'C', 'label': 'Node C', 'entity': 'Movie', 'description': 'A documentary about the west gulfs of Iraq and Syria'},
-            {'id': 'D', 'label': 'Node D', 'entity': 'Movie', 'description': 'A documentary about the western seas of North America'},
-            {'id': 'E', 'label': 'Node E', 'entity': 'Movie', 'description': 'A movie about dogs and cats'},
-            {'id': 'F', 'label': 'Node F', 'entity': 'Movie', 'description': 'A movie about ancient Egypt'},
-            {'id': 'G', 'label': 'Node G', 'entity': 'Movie', 'description': 'A documentary about the Amazon rainforest'},
-            {'id': 'H', 'label': 'Node H', 'entity': 'Movie', 'description': 'A documentary about space exploration'},
-            {'id': 'I', 'label': 'Node I', 'entity': 'Movie', 'description': 'A movie about medieval knights'},
-            {'id': 'J', 'label': 'Node J', 'entity': 'Movie', 'description': 'A documentary about the Great Barrier Reef'},
-            {'id': 'K', 'label': 'Node K', 'entity': 'Movie', 'description': 'A documentary about the Sahara desert'},
+            {'id': 'A', 'label': 'Node A', 'entity': 'Movie',
+                'description': 'A movie about horses in the wild west'},
+            {'id': 'B', 'label': 'Node B', 'entity': 'Movie',
+                'description': 'A documentary about the west coast of Ireland’s wildlife'},
+            {'id': 'C', 'label': 'Node C', 'entity': 'Movie',
+                'description': 'A documentary about the west gulfs of Iraq and Syria'},
+            {'id': 'D', 'label': 'Node D', 'entity': 'Movie',
+                'description': 'A documentary about the western seas of North America'},
+            {'id': 'E', 'label': 'Node E', 'entity': 'Movie',
+                'description': 'A movie about dogs and cats'},
+            {'id': 'F', 'label': 'Node F', 'entity': 'Movie',
+                'description': 'A movie about ancient Egypt'},
+            {'id': 'G', 'label': 'Node G', 'entity': 'Movie',
+                'description': 'A documentary about the Amazon rainforest'},
+            {'id': 'H', 'label': 'Node H', 'entity': 'Movie',
+                'description': 'A documentary about space exploration'},
+            {'id': 'I', 'label': 'Node I', 'entity': 'Movie',
+                'description': 'A movie about medieval knights'},
+            {'id': 'J', 'label': 'Node J', 'entity': 'Movie',
+                'description': 'A documentary about the Great Barrier Reef'},
+            {'id': 'K', 'label': 'Node K', 'entity': 'Movie',
+                'description': 'A documentary about the Sahara desert'},
         ],
         "edges": [
             {'id': '1', 'source': 'A', 'target': 'B', 'label': 'AB'},
@@ -182,5 +206,6 @@ if __name__ == "__main__":
     print(res)
     res = analyst.question('Are there any other interesting insights?')
     print(res)
-    res = analyst.question('Is there any indication of fictional vs factual content?')
+    res = analyst.question(
+        'Is there any indication of fictional vs factual content?')
     print(res)
