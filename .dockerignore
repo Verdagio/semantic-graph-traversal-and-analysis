@@ -1,0 +1,78 @@
+# Ignore Python bytecode files
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*$py.class
+
+# Ignore distribution and packaging directories
+build/
+dist/
+*.egg-info/
+.eggs/
+wheels/
+*.egg
+MANIFEST
+
+# Ignore virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Ignore logs
+*.log
+
+# Ignore unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Ignore documentation build directories
+docs/_build/
+
+# Ignore IDE / editor configurations
+.idea/
+.vscode/
+.spyderproject
+.spyproject
+.ropeproject
+
+# Ignore local configurations
+*.local
+*.env
+
+# Ignore Dockerfile and docker-compose.yml if not needed in the image
+Dockerfile
+docker-compose.yml
+
+# Ignore Git directory
+.git
+.gitignore
+
+# Ignore temporary files
+*.swp
+*.bak
+*.tmp
+*.temp
+
+# Ignore compiled C extensions
+*.so
+
+# Ignore custom directories or files
+my_custom_directory/
+my_custom_file.txt

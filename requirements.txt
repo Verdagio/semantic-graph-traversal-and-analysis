@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+numpy
+openai
+sentence-transformers
+scikit-learn
+nltk
+mistralai
+torch
+ollama
+pandas
+matplotlib
+networkx
+langchain_core
+transformers
