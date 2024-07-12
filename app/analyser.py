@@ -107,6 +107,7 @@ class Analyser:
         traversal_result = self.__traverse(graph, start_vertex_id, context)
         return traversal_result
 
+    # TODO: Add support for ontologies to inject into jsonld
     def analyse(self, graph_data, start_vertex_id, context):
         traversal_result = self.traverse(graph_data, start_vertex_id, context)
 

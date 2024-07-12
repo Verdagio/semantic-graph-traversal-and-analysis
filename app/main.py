@@ -18,6 +18,7 @@ class Config_Model_Request_Params(BaseModel):
     embedding_model_variant: Optional[str] = ''
     llm_name: Optional[str] = ''
 
+# TODO: Add support for ontologies
 class Traversal_Request_Params(BaseModel):
     graph_data: dict
     start_vertex_id: str

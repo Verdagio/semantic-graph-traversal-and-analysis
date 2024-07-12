@@ -74,5 +74,4 @@ docker-compose.yml
 *.so
 
 # Ignore custom directories or files
-my_custom_directory/
-my_custom_file.txt
+sample/
