@@ -66,17 +66,14 @@ async def get_traversal_history():
 @app.post("/api/v1/analyse/")
 async def analyze(params: Traversal_Request_Params):
     try:
-        result = analyser.analyse(params.graph_data, params.start_vertex_id, params.context)
-        print(result)
-        return result
+        return analyser.analyse(params.graph_data, params.start_vertex_id, params.context)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/api/v1/traverse/")
 async def analyze(params: Traversal_Request_Params):
     try:
-        result = analyser.traverse(params.graph_data, params.start_vertex_id, params.context)
-        return {"result": result}
+        return analyser.traverse(params.graph_data, params.start_vertex_id, params.context)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 

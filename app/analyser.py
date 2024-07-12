@@ -126,22 +126,7 @@ class Analyser:
         self.traversal_history[traversal_result['id']
                                ]['graph_analysis'] = response
 
-        # with open(f'{traversal_result.get("id")}.md', "w") as file:
-        #     file.write(response)
-
-        return {
-            "analysis": response, 
-            "traversal_data": {
-                "graph": traversal_result['meta']['graph'],
-                "user_provided_context": traversal_result['meta']['context'],
-                "start_vertex_id": traversal_result['meta']['start_vertex_id'],
-                "order": traversal_result['order'],
-                "scores": traversal_result['scores'],
-                "best_path": traversal_result['best_path'],
-                "best_score": traversal_result['best_score'],
-                "paths": traversal_result['paths']
-            }
-        }
+        return self.traversal_history[traversal_result['id']]
 
     def question(self, query):
         return self.llm.chat(query + "\n Instruction: Ignore the output template for this question. Just return the answer in markdown format.")
