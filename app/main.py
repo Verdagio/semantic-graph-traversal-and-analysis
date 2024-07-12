@@ -1,6 +1,5 @@
 # main.py
 import os
-import json
 from app.lib.encoders import EmbModelName
 import uvicorn
 from fastapi import FastAPI, HTTPException
