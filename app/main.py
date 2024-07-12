@@ -1,6 +1,6 @@
 # main.py
 import os
-from app.lib.encoders import EmbModelName
+from app.encoders import EmbModelName
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel

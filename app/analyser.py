@@ -2,12 +2,12 @@ import datetime
 import hashlib
 from langchain_core.prompts import PromptTemplate
 
-from app.lib.semantic_traversal import semantic_traversal
-from app.lib.encoders import EmbModelName, embedding_model_provider
-from app.lib.language_model import llm_provider
-from app.lib.default_prompt import get_default_prompt_template
-from app.lib.default_prompt import get_default_system_prompt
-from app.lib.graph import Graph, convert_to_jsonld
+from app.semantic_traversal import semantic_traversal
+from app.encoders import EmbModelName, embedding_model_provider
+from app.language_model import llm_provider
+from app.default_prompt import get_default_prompt_template
+from app.default_prompt import get_default_system_prompt
+from app.graph import Graph, convert_to_jsonld
 
 
 class Analyser:
