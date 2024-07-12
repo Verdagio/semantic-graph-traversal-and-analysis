@@ -13,3 +13,4 @@ matplotlib
 networkx
 langchain_core
 transformers
+pydantic
