@@ -5,7 +5,7 @@ import numpy as np
 from app.graph import Graph
 from app.encoders import EmbeddingModel
 
-def semantic_traversal(graph: Graph, embedding_model: EmbeddingModel, start_vertex_id: str, context: str, depreciation=0.05, min_score_threshold=0.1) -> tuple:
+def semantic_traversal(graph: Graph, embedding_model: EmbeddingModel, start_vertex_id: str, context: str, ignore_direction=False, depreciation=0.05, min_score_threshold=0.1) -> tuple:
     """
     Performs a semantic traversal on a graph using a given model and context.
 
@@ -26,17 +26,22 @@ def semantic_traversal(graph: Graph, embedding_model: EmbeddingModel, start_vert
     min_heap = [(0, start_vertex_id, [])]
     visited, order, scores, paths = set(), [], {}, {}
     
+    if ignore_direction:
+        incoming_edges = {v: [] for v in graph.adjacency_list}
+        for vertex_id in graph.adjacency_list:
+            for neighbor, _ in graph.adjacency_list[vertex_id]:
+                incoming_edges[neighbor].append(vertex_id)
+
     while min_heap:
         neg_current_mean, vertex_id, path = heapq.heappop(min_heap)
         current_mean = -neg_current_mean
         if vertex_id not in visited:
             visited.add(vertex_id)
             order.append(vertex_id)
-            next_verticies = []
-
             path = path + [vertex_id]
             paths[vertex_id] = path
             scores[vertex_id] = current_mean.item() if isinstance(current_mean, np.ndarray) else current_mean
+            next_verticies = []
 
             for neighbor, _ in graph.adjacency_list[vertex_id]: 
                 if neighbor not in visited:
@@ -49,9 +54,20 @@ def semantic_traversal(graph: Graph, embedding_model: EmbeddingModel, start_vert
             for neighbor, score in next_verticies:
                 new_mean = current_mean + score * (1 - depreciation) 
                 heapq.heappush(min_heap, (-new_mean, neighbor, path))
+            
+            if ignore_direction:
+                for incoming in incoming_edges[vertex_id]:
+                    if incoming not in visited:
+                        v = graph.get_vertex(incoming)
+                        vertex_emb = embedding_model.encode(str(v.properties))
+                        semantic_score = embedding_model.similarity(ctx_emb, vertex_emb)
+                        if semantic_score >= min_score_threshold:
+                            new_mean = current_mean + semantic_score * (1 - depreciation)
+                            heapq.heappush(min_heap, (-new_mean, incoming, path))
 
     best_vertex = max(scores, key=scores.get)
     best_path = paths[best_vertex]
     best_score = scores[best_vertex]
 
     return order, scores, best_path, best_score, paths
+

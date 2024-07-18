@@ -62,8 +62,8 @@ class Analyser:
 
         return graph
 
-    def __traverse(self, graph: Graph, start_vertex_id, context):
-        graph_hash = hashlib.sha256(graph.__repr__().encode()).hexdigest()
+    def __traverse(self, graph: Graph, start_vertex_id, context, ignore_direction):
+        graph_hash = hashlib.sha256(f'{graph.__repr__().encode()}-{context.encode()}'.encode()).hexdigest()
 
         embedding_model = self.traversal_attrs['embedding_model']
         depreciation = self.traversal_attrs['depreciation']
@@ -75,6 +75,7 @@ class Analyser:
                 start_vertex_id=start_vertex_id,
                 context=context,
                 embedding_model=embedding_model,
+                ignore_direction=ignore_direction,
                 depreciation=depreciation,
                 min_score_threshold=min_score_threshold
             )
@@ -100,16 +101,16 @@ class Analyser:
 
         return self.traversal_history[graph_hash]
 
-    def traverse(self, graph, start_vertex_id, context):
+    def traverse(self, graph, start_vertex_id, context, ignore_direction):
         if type(graph) != Graph:
             graph = self.__to_graph(graph)
 
-        traversal_result = self.__traverse(graph, start_vertex_id, context)
+        traversal_result = self.__traverse(graph, start_vertex_id, context, ignore_direction)
         return traversal_result
 
     # TODO: Add support for ontologies to inject into jsonld
-    def analyse(self, graph_data, start_vertex_id, context):
-        traversal_result = self.traverse(graph_data, start_vertex_id, context)
+    def analyse(self, graph_data, start_vertex_id, context, ignore_direction):
+        traversal_result = self.traverse(graph_data, start_vertex_id, context, ignore_direction)
 
         prompt = self.default_prompt.format(
             total_graph=traversal_result['meta']['graph'],
@@ -125,7 +126,7 @@ class Analyser:
         response = self.llm.chat(prompt)
 
         self.traversal_history[traversal_result['id']
-                               ]['graph_analysis'] = response
+                               ]['graph_analysis'] = str(response)
 
         return self.traversal_history[traversal_result['id']]
 

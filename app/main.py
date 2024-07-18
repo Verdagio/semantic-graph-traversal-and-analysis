@@ -23,6 +23,7 @@ class Traversal_Request_Params(BaseModel):
     graph_data: dict
     start_vertex_id: str
     context: str
+    ignore_direction: bool
 
 analyser = Analyser(
     embedding_model_name=str(os.getenv('EMBEDDING_MODEL_NAME')),
@@ -66,14 +67,14 @@ async def get_traversal_history():
 @app.post("/api/v1/analyse/")
 async def analyze(params: Traversal_Request_Params):
     try:
-        return analyser.analyse(params.graph_data, params.start_vertex_id, params.context)
+        return analyser.analyse(params.graph_data, params.start_vertex_id, params.context, params.ignore_direction)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/api/v1/traverse/")
 async def analyze(params: Traversal_Request_Params):
     try:
-        return analyser.traverse(params.graph_data, params.start_vertex_id, params.context)
+        return analyser.traverse(params.graph_data, params.start_vertex_id, params.context, params.ignore_direction)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 

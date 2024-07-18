@@ -5,6 +5,12 @@ __pycache__
 *.pyd
 *$py.class
 
+datasets/
+conver-to-csv.py
+
+sample-data-b.json
+sample-data.json
+
 # Ignore distribution and packaging directories
 build/
 dist/
