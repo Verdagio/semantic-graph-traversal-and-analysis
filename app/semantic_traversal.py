@@ -52,8 +52,8 @@ def semantic_traversal(graph: Graph, embedding_model: EmbeddingModel, start_vert
                         next_verticies.append((neighbor, semantic_score))
 
             for neighbor, score in next_verticies:
-                new_mean = current_mean + score * (1 - depreciation) 
-                heapq.heappush(min_heap, (-new_mean, neighbor, path))
+                # new_mean = current_mean + score * (1 - depreciation) 
+                heapq.heappush(min_heap, (-score, neighbor, path))
             
             if ignore_direction:
                 for incoming in incoming_edges[vertex_id]:
@@ -62,8 +62,8 @@ def semantic_traversal(graph: Graph, embedding_model: EmbeddingModel, start_vert
                         vertex_emb = embedding_model.encode(str(v.properties))
                         semantic_score = embedding_model.similarity(ctx_emb, vertex_emb)
                         if semantic_score >= min_score_threshold:
-                            new_mean = current_mean + semantic_score * (1 - depreciation)
-                            heapq.heappush(min_heap, (-new_mean, incoming, path))
+                            # new_mean = current_mean + semantic_score * (1 - depreciation)
+                            heapq.heappush(min_heap, (-semantic_score, incoming, path))
 
     best_vertex = max(scores, key=scores.get)
     best_path = paths[best_vertex]
