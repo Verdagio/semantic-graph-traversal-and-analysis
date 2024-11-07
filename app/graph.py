@@ -222,15 +222,52 @@ def convert_to_jsonld(graph, ontology={"entity": "https://schema.org/Thing"}, sa
 
 if __name__ == "__main__":
     graph = Graph()
+    # vertices = [
+    #     {'id': 'A', 'label': 'Node A', 'entity': 'Movie',
+    #         'description': 'A informational piece about the landmarks of Irelands wild atlantic way'},
+    #     {'id': 'B', 'label': 'Node B', 'entity': 'Movie',
+    #         'description': 'A documentary about the west coast of Ireland’s wildlife'}
+    # ]
+
+    # edges = [
+    #     {'id': '1', 'source': 'A', 'target': 'B', 'label': 'AB'},
+    # ]
+    
     vertices = [
-        {'id': 'A', 'label': 'Node A', 'entity': 'Movie',
-            'description': 'A informational piece about the landmarks of Irelands wild atlantic way'},
-        {'id': 'B', 'label': 'Node B', 'entity': 'Movie',
-            'description': 'A documentary about the west coast of Ireland’s wildlife'}
+    {'id': 'A', 'label': 'Node A', 'entity': 'Movie', 'description': 'A movie about horses in the wild west'},
+    {'id': 'B', 'label': 'Node B', 'entity': 'Movie', 'description': 'A documentary about the west coast of Ireland’s wildlife'},
+    {'id': 'C', 'label': 'Node C', 'entity': 'Movie', 'description': 'A documentary about the west gulfs of Iraq and the pirate raiders'},
+    {'id': 'D', 'label': 'Node D', 'entity': 'Movie', 'description': 'A documentary about the western seas of North America'},
+    {'id': 'E', 'label': 'Node E', 'entity': 'Movie', 'description': 'A movie about dogs and cats'},
+    {'id': 'F', 'label': 'Node F', 'entity': 'Movie', 'description': 'A movie about ancient Egypt'},
+    {'id': 'G', 'label': 'Node G', 'entity': 'Movie', 'description': 'A documentary about the Amazon rainforest'},
+    {'id': 'H', 'label': 'Node H', 'entity': 'Movie', 'description': 'A documentary about space exploration'},
+    {'id': 'I', 'label': 'Node I', 'entity': 'Movie', 'description': 'A movie about medieval knights'},
+    {'id': 'J', 'label': 'Node J', 'entity': 'Movie', 'description': 'A documentary about the Great Barrier Reef'},
+    {'id': 'K', 'label': 'Node K', 'entity': 'Movie', 'description': 'A documentary about the Sahara desert'},
     ]
 
     edges = [
-        {'id': '1', 'source': 'A', 'target': 'B', 'label': 'AB'},
+    {'id': '1', 'source': 'A', 'target': 'B', 'label': 'AB'},
+    {'id': '2', 'source': 'A', 'target': 'C', 'label': 'AC'},
+    {'id': '3', 'source': 'B', 'target': 'D', 'label': 'BD'},
+    {'id': '4', 'source': 'C', 'target': 'D', 'label': 'CD'},
+    {'id': '5', 'source': 'D', 'target': 'E', 'label': 'DE'},
+    {'id': '6', 'source': 'A', 'target': 'F', 'label': 'AF'},
+    {'id': '7', 'source': 'B', 'target': 'G', 'label': 'BG'},
+    {'id': '8', 'source': 'C', 'target': 'H', 'label': 'CH'},
+    {'id': '9', 'source': 'D', 'target': 'I', 'label': 'DI'},
+    {'id': '10', 'source': 'E', 'target': 'J', 'label': 'EJ'},
+    {'id': '11', 'source': 'F', 'target': 'G', 'label': 'FG'},
+    {'id': '12', 'source': 'G', 'target': 'H', 'label': 'GH'},
+    {'id': '13', 'source': 'H', 'target': 'I', 'label': 'HI'},
+    {'id': '14', 'source': 'I', 'target': 'J', 'label': 'IJ'},
+    {'id': '15', 'source': 'J', 'target': 'K', 'label': 'JK'},
+    {'id': '16', 'source': 'K', 'target': 'A', 'label': 'KA'},
+    {'id': '17', 'source': 'E', 'target': 'K', 'label': 'EK'},
+    {'id': '18', 'source': 'F', 'target': 'H', 'label': 'FH'},
+    {'id': '19', 'source': 'G', 'target': 'I', 'label': 'GI'},
+    {'id': '20', 'source': 'J', 'target': 'A', 'label': 'JA'},
     ]
 
     for vertex in vertices:
@@ -239,4 +276,4 @@ if __name__ == "__main__":
     for edge in edges:
         graph.add_edge(edge)
 
-    print(graph)
+    print(convert_to_jsonld(graph))

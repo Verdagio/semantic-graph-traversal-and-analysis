@@ -96,23 +96,6 @@ def llm_provider(model_name: str) -> ChatModel:
 
 # Example usage
 if __name__ == "__main__":
-    
-    # tools = [
-    #     {
-    #         "name": "greeter",
-    #         "description": "inserts name and age into text",
-    #         "parameters": {
-    #             "type": "object",
-    #             "properties": {
-    #                 "name": {"type": "string"},
-    #                 "age": {"type": "number"}
-    #             },
-    #             "required": ["text", "model"]
-    #         },
-    #         "returns": {"type": "string"}
-    #     }
-        
-    # ]
     llm = llm_provider('gpt-4o')
 
     llm.set_system_message("You are a helpful assistant.")
